@@ -19,7 +19,7 @@ git clone git@github.com:llemanh/tl-challenge.git
 docker-compose up --build
 ```
 
-This can be a quite slow as the wikipedia data is huge. 
+This can be a quite slow as the wikipedia data is huge (~30mn). 
 
 ### Connect to PG
 
@@ -34,12 +34,6 @@ The kaggle dataset was downloaded and stored in the repository while the wikiped
 ### Improvements
 
 The process of downloading and parsing the xml everytime is very slow. Ideally we should store the whole dataset somewhere and only process new data. Furthermore we should add some schema tests to ensure the quality of the data we are downloading. 
-
-
-
-
-
-Using python to process the data is not ideal. Python could be leveraged to download the data and drop them into a data lake. The data could be then loaded as raw into a cloud warehouse and processed with SQL. 
 
 
 
