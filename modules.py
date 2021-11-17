@@ -3,10 +3,10 @@ import gzip
 import shutil
 import requests
 import ssl
-import zipfile
 import xml.sax
-import subprocess
 import ssl
+import numpy as np
+from sqlalchemy import create_engine
 
 
 def download_abstract(url, path_out):
@@ -49,4 +49,31 @@ class WikiXmlHandler(xml.sax.handler.ContentHandler):
 
         if name == 'doc':
             self._content[self._values['title'].strip('Wikipedia: ')] = [self._values['url'], self._values['abstract']]
+
+
+def process_movies(path, cols_to_keep):
+    df=pd.read_csv(path)
+    df['budget']=df['budget'].apply(pd.to_numeric, errors='coerce')
+    df = df[(df['budget'] != 0.0)]
+    df['ratio']=df['revenue']/df['budget']
+    df = df.drop([col for col in df.columns if col not in cols_to_keep], axis=1)
+    df = df.sort_values('ratio',ascending = False).head(1000).reset_index(drop=True)
+    return df
+
+def process_wiki_data(path,encoding,titles):
+    handler = WikiXmlHandler()
+    parser = xml.sax.make_parser()
+    parser.setContentHandler(handler)
+    for line in open(path, encoding=encoding):
+        parser.feed(line)
+    frame=[]
+    for title in set(titles).intersection(list(handler._content.keys())):
+        frame.append({'title': title, 'url':handler._content[title][0], 'abstract':handler._content[title][1]})
+    return pd.DataFrame(frame)
+
+def publish_to_pg(db,table,df):
+    engine = create_engine('postgresql://postgres:c@localhost:5432/'+db)
+    con = engine.connect()
+    df.to_sql(table, con, index=False)
+
 
