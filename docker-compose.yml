@@ -1,0 +1,18 @@
+version: '2'
+services:
+    app:
+      build: .
+      depends_on:
+        - postgres
+      entrypoint: /run_pipeline
+      environment:
+        - PYTHONUNBUFFERED=0
+
+    postgres:
+        image: postgres
+        ports:
+            - 5432:5432
+        environment:
+            POSTGRES_USER: user
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: db
