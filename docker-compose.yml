@@ -3,16 +3,36 @@ services:
     app:
       build: .
       depends_on:
-        - postgres
+        - postgresql12
       entrypoint: /run_pipeline
       environment:
         - PYTHONUNBUFFERED=0
 
-    postgres:
-        image: postgres
+    db:
+        image: 'postgres:12.2'
         ports:
-            - 5432:5432
+          - '5432:5432'
+        volumes:
+          - '/var/lib/postgresql/data'
         environment:
-            POSTGRES_USER: user
-            POSTGRES_PASSWORD: password
-            POSTGRES_DB: db
+          - POSTGRES_USER=postgres
+          - POSTGRES_DB=new_db
+          - POSTGRES_HOST_AUTH_METHOD=trust
+
+    pgadmin:
+        image: dpage/pgadmin4:4.18
+        environment:
+          PGADMIN_DEFAULT_EMAIL: postgres@postgres.com
+          PGADMIN_DEFAULT_PASSWORD: password
+          PGADMIN_LISTEN_PORT: 80
+        ports:
+        - "8080:80"
+        volumes:
+        - '/var/lib/pgadmin'
+        links:
+        - "db:pgsql-server"
+
+volumes:
+  db:
+    driver: local
+  pgadmin:
