@@ -72,7 +72,7 @@ def process_wiki_data(path,encoding,titles):
     return pd.DataFrame(frame)
 
 def publish_to_pg(db,table,df):
-    engine = create_engine('postgresql://postgres:c@localhost:5432/'+db)
+    engine = create_engine('postgresql://postgres@db:5432/'+db)
     con = engine.connect()
     df.to_sql(table, con, index=False)
 
