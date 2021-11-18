@@ -8,7 +8,6 @@ git clone git@github.com:llemanh/tl-challenge.git
 ```
 
 - Download [docker](https://docs.docker.com/get-docker/) for your OS.
-- Download [pgadmin](https://www.pgadmin.org/download/) for your OS.
 
 ### Run
 - From your CLI go to to the root of the repository you just cloned.
@@ -23,9 +22,12 @@ This can be a quite slow as the wikipedia data is huge (~30mn).
 
 ### Connect to PG
 
-- Open PgAdmin and set up a connection to localhost as follow:
+- Go to: http://localhost:8080
+- username: postgres@postgres.com
+- password: password
+- Follow the step below to create a connection:
 
-![image](server.png)
+![image](config.png)
 
 ### Methodology
 
